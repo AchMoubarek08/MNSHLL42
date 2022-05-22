@@ -40,7 +40,7 @@ t_lexer	*ft_init_lexer(char *str, char c)
         return (NULL);
     lexer->str = str; //aka line
     lexer->c = c; // first char of line
-    lexer->i = 0; //first index of line
+    lexer->i = 0;
     return (lexer);
 }
 t_lexer *advance_lexer(t_lexer *lexer)
@@ -75,6 +75,8 @@ t_token	*send_lexer_to_tokenize(t_lexer *lexer)
 			val = ft_strsub(lexer, size);
 			advance_lexer(lexer);
 			token = init_token(val, type);
+			if(lexer->c != ' ' && lexer->c != '\0')
+				token->flag = 1;
 			tmp = lst_add_back(tmp, token);
 		}
 		else if (lexer->c == 34)
@@ -82,29 +84,14 @@ t_token	*send_lexer_to_tokenize(t_lexer *lexer)
 			type = DQUOTE;
 			advance_lexer(lexer);
 			if	(ft_int_strchr(&(lexer->str[lexer->i]), 34) >= 0)
-			{
 				size = ft_int_strchr(&(lexer->str[lexer->i]), 34);
-				val = ft_strsub(lexer, size);
-			}
+			else
+				size = ft_int_strchr(&(lexer->str[lexer->i]), '\0');
+			val = ft_strsub(lexer, size);
 			advance_lexer(lexer);
-			while(!is_token(lexer->c) && lexer->c)
-			{
-				val = ft_strcharjoin(val, lexer->c);
-				while(lexer->str[lexer->i + 1] == 34)
-				{
-					advance_lexer(lexer);
-					continue;
-				}
-				advance_lexer(lexer);
-			}
 			token = init_token(val, type);
-			tmp = lst_add_back(tmp, token);
-		}
-		else if (lexer->c == '\\')
-		{
-			type = BACKSLASH;
-			val = ft_strsub(lexer, 1);
-			token = init_token(val, type);
+			if(lexer->c != ' ' && lexer->c != '\0')
+				token->flag = 1;
 			tmp = lst_add_back(tmp, token);
 		}
 		else if (lexer->c == '|')
@@ -166,6 +153,8 @@ t_token	*send_lexer_to_tokenize(t_lexer *lexer)
 				size = ft_int_strchr(&(lexer->str[lexer->i]), '\0');
 			val = ft_strsub(lexer, size);
 			token = init_token(val, type);
+			if(lexer->c != ' ' && lexer->c != '\0')
+				token->flag = 1;
 			tmp = lst_add_back(tmp, token);
 		}
 	}

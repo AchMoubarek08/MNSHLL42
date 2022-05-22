@@ -6,7 +6,7 @@
 /*   By: fahd <fahd@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/15 18:20:30 by fahd              #+#    #+#             */
-/*   Updated: 2022/05/21 04:28:24 by fahd             ###   ########.fr       */
+/*   Updated: 2022/05/22 02:09:30 by fahd             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ typedef struct s_lexer
 typedef struct s_token
 {
     char *val;
+    int flag;
     struct s_token *next;
     enum
     {
@@ -59,14 +60,21 @@ typedef struct s_token
     } type;
 }               t_token;
 
+typedef struct s_redir
+{
+    int     fd;
+    char *file;
+    int     type;
+    struct s_redir *next;
+
+}               t_redir;
+
 typedef struct s_parse
 {
     char *cmd;
-    char **args;
-    int fdin;
-    int fdout;
-    int fderr;
-    char *path;
+    char **argv;
+    t_redir *redir;
+    struct s_parse *next;
 }            t_parse;
 
 t_lexer	*ft_init_lexer(char *str, char c);
@@ -100,8 +108,6 @@ void	ft_putstr_fd(char *s, int fd);
 char	*ft_strchr(const char *str, int c);
 int	ft_int_strchr(const char *s, int c);
 int	token_index(char *str);
-int is_token(char c);
-char	*ft_substr(char *s, unsigned int start, size_t len);
-char	*ft_strcharjoin(char *s1, char c);
+int	lst_size(t_token *b);
 
 #endif
