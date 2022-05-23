@@ -12,6 +12,17 @@
 
 #include "minishell.h"
 
+// t_redir *init_redir(char *val, int type)
+// {
+//     // t_redir *redir;
+
+//     // if (!(redir = (t_redir *)malloc(sizeof(t_redir))))
+//     //     return (NULL);
+//     // redir->file = strdup(val);
+//     // redir->next = NULL;
+//     // redir->type = type;
+//     // return (redir);
+// }
 // t_parse *init_command(void)
 // {
 //     t_parse *command;
@@ -33,17 +44,6 @@
 //     return (commad);
 // }
 
-// t_redir *init_redir(char *val, int type)
-// {
-//     // t_redir *redir;
-
-//     // if (!(redir = (t_redir *)malloc(sizeof(t_redir))))
-//     //     return (NULL);
-//     // redir->file = strdup(val);
-//     // redir->next = NULL;
-//     // redir->type = type;
-//     // return (redir);
-// }
 
 // t_redir *lst_add_back_redir(t_redir *lst, t_redir *new)
 // {
@@ -69,7 +69,7 @@
 
 void    parse_commands(t_token *token, t_parse *command)
 {
-    // if (token->type == WORD)
+    // if (token->type == WORD || token->type == DQUOTE || token->type == SQUOTE)
     // {
     //     if (!command->cmd)
     //         command->cmd = strdup(token->val);
@@ -114,4 +114,31 @@ int	lst_size(t_token *b)
 		b = b->next;
 	}
 	return (len);
+}
+char    *jme3flag(t_token *head)
+{
+    char *result;
+    while(head->flag)
+    {
+        result = ft_strjoin(result, head->val);
+        if(!head->next->flag)
+          result = ft_strjoin(result, head->next->val);  
+        head = head->next;
+    }
+    return(result);
+}
+char  **katjme3args(t_token **token)
+{
+    int i = 0;
+    char **args;
+    while((*token)->type != PIPE)
+    {
+        if((*token)->flag)
+            args[i] = jme3flag(token);
+        else
+            args[i] = (*token)->val;
+        (*token) = (*token)->next;
+        i++;
+    }
+    return(args);
 }

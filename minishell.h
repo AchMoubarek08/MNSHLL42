@@ -49,7 +49,6 @@ typedef struct s_token
         WORD,
         DQUOTE,
         SQUOTE,
-        BACKSLASH,
         PIPE,
         GREATANDGREAT,
         LESSANDLESS,
